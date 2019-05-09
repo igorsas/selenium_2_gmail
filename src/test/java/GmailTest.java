@@ -97,7 +97,6 @@ public class GmailTest {
         searchButton.click();
         TimeUnit.SECONDS.sleep(10);
         WebElement sentMessage = driver.findElement(By.xpath("//div[@class='AO']//div[@role='main']//tbody/tr[1]"));
-        LOGGER.info(sentMessage.getText());
         assertTrue(sentMessage.getText().contains(SENT_MESSAGE_TITLE));
         LOGGER.info("Letter sent OK");
     }
