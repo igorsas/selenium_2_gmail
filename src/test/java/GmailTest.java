@@ -15,7 +15,7 @@ import static org.testng.Assert.*;
 
 public class GmailTest {
     private static final Logger LOGGER = LogManager.getLogger(GmailTest.class);
-    public static final String INITIAL_URL = "https://mail.google.com/";
+    private static final String INITIAL_URL = "https://mail.google.com/";
     private static final String EMAIL_NAME = "groot.epam@gmail.com";
     private static final String EMAIL_PASSWORD = "iamgroot";
     private static final String RECEIVER_EMAIL = "paprika0015@gmail.com";
@@ -65,7 +65,7 @@ public class GmailTest {
         LOGGER.info("Input password OK");
     }
 
-    private void sendLetter() throws InterruptedException {
+    private void sendLetter() {
         openWriteWindow();
         writeReceiver();
         writeTopic();
