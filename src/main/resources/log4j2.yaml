@@ -1,0 +1,61 @@
+configuration:
+  packages: "com.igor"
+  name: Log4j2_Config
+
+  Properties:
+    property:
+      name: log_path
+      value: "logs"
+
+  Appenders:
+    RollingFile:
+      - name: RollingFile_AppenderAll
+        fileName: logs/rollingfileAll.log
+        filePattern: /rollingfileAll.log
+        PatternLayout:
+          Pattern: "%highlight{%-5level}{FATAL=bg_red} %style{%date{yyyy-MM-dd
+                             HH:mm:ss.SSS}}{blue} %class{1}:%L - %highlight{%msg} %xEx{short}%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 1 MB
+        DefaultRollOverStrategy:
+          max: 1
+
+    Console:
+      name: Console_Appender
+      PatternLayout:
+        Pattern: "%highlight{%-5level}{FATAL=bg_red}  %highlight{%msg} %xEx{short}%n"
+
+    File:
+      - name: File_AppenderHigherWarn
+        fileName: logs/File_AppenderHIGHERWARN.log
+        PatternLayout:
+          Pattern: "%highlight{%-5level}{FATAL=bg_red} %style{%date{yyyy-MM-dd
+                             HH:mm:ss.SSS}}{blue} %class{1}:%L - %highlight{%msg} %xEx{short}%n"
+        Filters:
+          ThresholdFilter:
+            level: error
+            onMatch: NEUTRAL
+            onMismatch: DENY
+
+  Loggers:
+
+    Root:
+      level: all
+      AppenderRef:
+        - ref: RollingFile_AppenderAll
+        - ref: Console_Appender
+        - ref: File_AppenderHigherWarn
+
+
+    Logger:
+      - name: com.igor.view.View
+        additivity: false
+        level: trace
+        AppenderRef:
+          - ref: File_AppenderHigherWarn
+            level: warn
+          - ref: Console_Appender
+            level: info
+          - ref: RollingFile_AppenderAll
+            level: info
