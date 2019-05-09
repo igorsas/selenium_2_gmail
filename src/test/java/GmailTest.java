@@ -19,7 +19,9 @@ public class GmailTest {
     private static final String EMAIL_NAME = "groot.epam@gmail.com";
     private static final String EMAIL_PASSWORD = "iamgroot";
     private static final String RECEIVER_EMAIL = "paprika0015@gmail.com";
-    private static final String SENT_MESSAGE = "I am Groot!" + Keys.ENTER + "Mr. Stark will die.";
+    private static final String SENT_MESSAGE = "I am Groot!";
+    private static final String SENT_MESSAGE_TITLE = "Final battle";
+
     private WebDriver driver = DriverManager.getDriver();
 
 
@@ -39,6 +41,7 @@ public class GmailTest {
         driver.get(INITIAL_URL);
         logIn();
         sendLetter();
+        TimeUnit.SECONDS.sleep(5);
         checkSentLetter();
     }
 
@@ -57,7 +60,7 @@ public class GmailTest {
     }
 
     private void writePassword() throws InterruptedException {
-        WebElement passwordInput = driver.findElement(By.xpath("//input[@type='password' and @name='password']"));
+        WebElement passwordInput = driver.findElement(By.name("password"));
         passwordInput.sendKeys(EMAIL_PASSWORD);
         passwordInput.sendKeys(Keys.ENTER);
         TimeUnit.SECONDS.sleep(10);
@@ -65,38 +68,37 @@ public class GmailTest {
         LOGGER.info("Input password OK");
     }
 
-    private void sendLetter() { openWriteWindow();
-        writeReceiver();
-        writeTopic();
+    private void sendLetter() {
+        openWriteWindow();
         writeMessage();
-        WebElement sendButton = driver.findElement(By.id(":8m"));
+        WebElement sendButton = driver.findElement(By.cssSelector("table[role=group]>tbody>tr>td:first-child>div>div>div:first-child"));
         sendButton.click();
     }
 
     private void writeMessage() {
-        WebElement messageInput = driver.findElement(By.id(":a1"));
+        WebElement shortInfoBlock = driver.findElement(By.xpath("//input[@name='composeid']/.."));
+        WebElement receiverInput = shortInfoBlock.findElement(By.xpath("./div[1]//textarea[@name='to']"));
+        WebElement topicInput = shortInfoBlock.findElement(By.xpath("./div[3]//input[@name='subjectbox']"));
+        receiverInput.sendKeys(RECEIVER_EMAIL);
+        topicInput.sendKeys(SENT_MESSAGE_TITLE);
+        WebElement messageInput = shortInfoBlock.findElement(By.xpath("../table//div[@role='textbox']"));
         messageInput.sendKeys(SENT_MESSAGE);
     }
-
-    private void writeTopic() {
-        WebElement topicInput = driver.findElement(By.id(":8w"));
-        topicInput.sendKeys("Final battle");
-    }
-
-    private void writeReceiver() {
-        WebElement receiverInput = driver.findElement(By.id(":9e"));
-        receiverInput.sendKeys(RECEIVER_EMAIL);
-    }
-
     private void openWriteWindow() {
-        WebElement writeBlock = driver.findElement(By.cssSelector("#\\:3q>div>div"));
+        WebElement menu = driver.findElement(By.xpath("//div[@role='complementary']/.."));
+        WebElement writeBlock = menu.findElement(By.xpath(".//div[@role='button']"));
         writeBlock.click();
     }
 
-    private void checkSentLetter() {
-        WebElement sentBlock = driver.findElement(By.xpath("//*[@id=':3k']/div/div[2]/span/a"));
-        sentBlock.click();
-        WebElement sentMessage = driver.findElement(By.xpath("//*[@id=':1od']/div/div/span/text()"));
-        assertEquals(sentMessage.getText(), SENT_MESSAGE);
+    private void checkSentLetter() throws InterruptedException {
+        WebElement searchInput = driver.findElement(By.xpath("//form[@role='search']//input"));
+        searchInput.sendKeys("in:sent");
+        WebElement searchButton = searchInput.findElement(By.xpath("//form[@role='search']/button[4]"));
+        searchButton.click();
+        TimeUnit.SECONDS.sleep(10);
+        WebElement sentMessage = driver.findElement(By.xpath("//div[@class='AO']//div[@role='main']//tbody/tr[1]"));
+        LOGGER.info(sentMessage.getText());
+        assertTrue(sentMessage.getText().contains(SENT_MESSAGE_TITLE));
+        LOGGER.info("Letter sent OK");
     }
 }
