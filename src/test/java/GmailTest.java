@@ -35,7 +35,7 @@ public class GmailTest {
     }
 
     @Test
-    public void findApplePhotosTest() throws InterruptedException {
+    public void sendEmailTest() throws InterruptedException {
         driver.get(INITIAL_URL);
         logIn();
         sendLetter();
