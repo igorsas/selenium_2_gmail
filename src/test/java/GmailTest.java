@@ -65,8 +65,7 @@ public class GmailTest {
         LOGGER.info("Input password OK");
     }
 
-    private void sendLetter() {
-        openWriteWindow();
+    private void sendLetter() { openWriteWindow();
         writeReceiver();
         writeTopic();
         writeMessage();
@@ -75,8 +74,8 @@ public class GmailTest {
     }
 
     private void writeMessage() {
-        WebElement massegeInput = driver.findElement(By.id(":a1"));
-        massegeInput.sendKeys(SENT_MESSAGE);
+        WebElement messageInput = driver.findElement(By.id(":a1"));
+        messageInput.sendKeys(SENT_MESSAGE);
     }
 
     private void writeTopic() {
