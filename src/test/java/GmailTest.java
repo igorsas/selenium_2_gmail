@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,6 +26,7 @@ public class GmailTest {
     private static final String SENT_MESSAGE_TITLE = "Final battle";
 
     private WebDriver driver = DriverManager.getDriver();
+    private WebDriverWait driverWait = DriverManager.getDriverWait();
 
     @BeforeClass
     public void setImplicitWaitToDriver() {
@@ -36,15 +39,15 @@ public class GmailTest {
     }
 
     @Test
-    public void sendEmailTest() throws InterruptedException {
+    public void sendEmailTest() {
         driver.get(INITIAL_URL);
         logIn();
         sendLetter();
-        TimeUnit.SECONDS.sleep(5);
+        DriverManager.waitWhilePageLoad(5);
         checkSentLetter();
     }
 
-    private void logIn() throws InterruptedException {
+    private void logIn() {
         writeUsername();
         writePassword();
     }
@@ -58,12 +61,12 @@ public class GmailTest {
         LOGGER.info("Input username OK");
     }
 
-    private void writePassword() throws InterruptedException {
+    private void writePassword() {
         WebElement passwordInput = driver.findElement(By.name("password"));
         passwordInput.sendKeys(EMAIL_PASSWORD);
         passwordInput.sendKeys(Keys.ENTER);
-        TimeUnit.SECONDS.sleep(10);
-        assertTrue(driver.getTitle().contains(EMAIL_NAME));
+        DriverManager.waitWhilePageLoad(10);
+//        assertTrue(driver.getTitle().contains(EMAIL_NAME));
         LOGGER.info("Input password OK");
     }
 
@@ -89,12 +92,12 @@ public class GmailTest {
         writeBlock.click();
     }
 
-    private void checkSentLetter() throws InterruptedException {
+    private void checkSentLetter(){
         WebElement searchInput = driver.findElement(By.xpath("//form[@role='search']//input"));
         searchInput.sendKeys("in:sent");
         WebElement searchButton = searchInput.findElement(By.xpath("//form[@role='search']/button[4]"));
         searchButton.click();
-        TimeUnit.SECONDS.sleep(10);
+        driverWait.until(ExpectedConditions.urlContains("sent"));
         WebElement sentMessage = driver.findElement(By.xpath("//div[@class='AO']//div[@role='main']//tbody"));
         WebElement sentMessageText = sentMessage.findElement(By.xpath("./tr[1]"));
         WebElement sentMessageDate = sentMessageText.findElement(By.xpath("./td[last()-1]/span"));
