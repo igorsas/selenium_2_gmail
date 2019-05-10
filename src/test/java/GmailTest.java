@@ -1,4 +1,5 @@
 import com.igor.driver.DriverManager;
+import com.igor.model.Spoiler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
@@ -19,17 +20,15 @@ public class GmailTest {
     private static final String EMAIL_NAME = "groot.epam@gmail.com";
     private static final String EMAIL_PASSWORD = "iamgroot";
     private static final String RECEIVER_EMAIL = "paprika0015@gmail.com";
-    private static final String SENT_MESSAGE = "I am Groot! Natasha was hot, but she's gone.";
+    private static final String SENT_MESSAGE = "I am Groot! " + Spoiler.getSpoiler();
     private static final String SENT_MESSAGE_TITLE = "Final battle";
 
     private WebDriver driver = DriverManager.getDriver();
-
 
     @BeforeClass
     public void setImplicitWaitToDriver() {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
-
 
     @AfterClass
     public void quitDriver() {
