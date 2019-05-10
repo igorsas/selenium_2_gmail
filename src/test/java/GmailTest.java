@@ -19,7 +19,7 @@ public class GmailTest {
     private static final String EMAIL_NAME = "groot.epam@gmail.com";
     private static final String EMAIL_PASSWORD = "iamgroot";
     private static final String RECEIVER_EMAIL = "paprika0015@gmail.com";
-    private static final String SENT_MESSAGE = "I am Groot!";
+    private static final String SENT_MESSAGE = "I am Groot! Natasha was hot, but she's gone.";
     private static final String SENT_MESSAGE_TITLE = "Final battle";
 
     private WebDriver driver = DriverManager.getDriver();
@@ -96,8 +96,11 @@ public class GmailTest {
         WebElement searchButton = searchInput.findElement(By.xpath("//form[@role='search']/button[4]"));
         searchButton.click();
         TimeUnit.SECONDS.sleep(10);
-        WebElement sentMessage = driver.findElement(By.xpath("//div[@class='AO']//div[@role='main']//tbody/tr[1]"));
-        assertTrue(sentMessage.getText().contains(SENT_MESSAGE_TITLE));
+        WebElement sentMessage = driver.findElement(By.xpath("//div[@class='AO']//div[@role='main']//tbody"));
+        WebElement sentMessageText = sentMessage.findElement(By.xpath("./tr[1]"));
+        WebElement sentMessageDate = sentMessageText.findElement(By.xpath("./td[last()-1]/span"));
+        LOGGER.info("Time, when letter was sent: " + sentMessageDate.getText());
+        assertTrue(sentMessageText.getText().contains(SENT_MESSAGE_TITLE) && sentMessage.getText().contains(SENT_MESSAGE));
         LOGGER.info("Letter sent OK");
     }
 }
