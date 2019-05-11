@@ -68,7 +68,7 @@ public class GmailTest {
         passwordInput.sendKeys(EMAIL_PASSWORD);
         passwordInput.sendKeys(Keys.ENTER);
         DriverManager.waitWhilePageLoad(10);
-//        assertTrue(driver.getTitle().contains(EMAIL_NAME));
+        assertTrue(driver.getTitle().contains(EMAIL_NAME));
         LOGGER.info("Input password OK");
     }
 
