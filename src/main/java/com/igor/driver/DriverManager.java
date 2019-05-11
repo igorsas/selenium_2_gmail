@@ -19,9 +19,10 @@ public class DriverManager {
         driver = new ChromeDriver(options);
     }
 
-    private DriverManager(){}
+    private DriverManager() {
+    }
 
-    public static WebDriver getDriver(){
+    public static WebDriver getDriver() {
         return driver;
     }
 
@@ -32,7 +33,7 @@ public class DriverManager {
         return driverWait;
     }
 
-    public static void waitWhilePageLoad(int seconds){
+    public static void waitWhilePageLoad(int seconds) {
         driver.manage().timeouts().pageLoadTimeout(seconds, TimeUnit.SECONDS);
     }
 }

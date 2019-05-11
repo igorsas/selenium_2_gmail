@@ -14,7 +14,8 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class GmailTest {
     private static final Logger LOGGER = LogManager.getLogger(GmailTest.class);
@@ -40,6 +41,7 @@ public class GmailTest {
 
     @Test
     public void sendEmailTest() {
+
         driver.get(INITIAL_URL);
         logIn();
         sendLetter();
@@ -78,27 +80,29 @@ public class GmailTest {
     }
 
     private void writeMessage() {
-        WebElement shortInfoBlock = driver.findElement(By.xpath("//input[@name='composeid']/.."));
-        WebElement receiverInput = shortInfoBlock.findElement(By.xpath("./div[1]//textarea[@name='to']"));
-        WebElement topicInput = shortInfoBlock.findElement(By.xpath("./div[3]//input[@name='subjectbox']"));
+        WebElement receiverInput = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@name='to']")));
+        WebElement topicInput = driver.findElement(By.xpath("//input[@name='subjectbox']"));
         receiverInput.sendKeys(RECEIVER_EMAIL);
         topicInput.sendKeys(SENT_MESSAGE_TITLE);
+        WebElement shortInfoBlock = driver.findElement(By.xpath("//input[@name='composeid']/.."));
         WebElement messageInput = shortInfoBlock.findElement(By.xpath("../table//div[@role='textbox']"));
         messageInput.sendKeys(SENT_MESSAGE);
     }
+
     private void openWriteWindow() {
         WebElement menu = driver.findElement(By.xpath("//div[@role='complementary']/.."));
         WebElement writeBlock = menu.findElement(By.xpath(".//div[@role='button']"));
         writeBlock.click();
     }
 
-    private void checkSentLetter(){
+    private void checkSentLetter() {
         WebElement searchInput = driver.findElement(By.xpath("//form[@role='search']//input"));
         searchInput.sendKeys("in:sent");
         WebElement searchButton = searchInput.findElement(By.xpath("//form[@role='search']/button[4]"));
         searchButton.click();
         driverWait.until(ExpectedConditions.urlContains("sent"));
-        WebElement sentMessage = driver.findElement(By.xpath("//div[@class='AO']//div[@role='main']//tbody"));
+        driverWait.until(ExpectedConditions.not(ExpectedConditions.textToBe(By.xpath("div[@role='main']//tbody/tr[1]/*[@tabindex]/div/div/span"), " ")));
+        WebElement sentMessage = driver.findElement(By.xpath("//div[@role='main']//tbody"));
         WebElement sentMessageText = sentMessage.findElement(By.xpath("./tr[1]"));
         WebElement sentMessageDate = sentMessageText.findElement(By.xpath("./td[last()-1]/span"));
         LOGGER.info("Time, when letter was sent: " + sentMessageDate.getText());
