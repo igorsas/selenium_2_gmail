@@ -97,6 +97,7 @@ public class GmailTest {
 
     private void checkSentLetter() {
         WebElement searchInput = driver.findElement(By.xpath("//form[@role='search']//input"));
+        searchInput.clear();
         searchInput.sendKeys("in:sent");
         WebElement searchButton = searchInput.findElement(By.xpath("//form[@role='search']/button[4]"));
         searchButton.click();
